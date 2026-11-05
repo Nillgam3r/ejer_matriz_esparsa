@@ -18,4 +18,4 @@ typedef struct {
  */
 void convertir_txt_a_binario(const char *archivo_txt, const char *archivo_bin);
 
-#endif // CONVERSOR_H
+#endif
