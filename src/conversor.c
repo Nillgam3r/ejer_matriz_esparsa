@@ -3,21 +3,19 @@
 #include <stdlib.h>
 
 void convertir_txt_a_binario(const char *archivo_txt, const char *archivo_bin) {
-    // 1. Abrir archivos en los modos correctos
     FILE *txt = fopen(archivo_txt, "r");
     if (txt == NULL) {
         perror("Error al abrir el archivo de texto origen");
         return;
     }
 
-    FILE *bin = fopen(archivo_bin, "wb"); // "wb" -> escritura binaria
+    FILE *bin = fopen(archivo_bin, "wb");
     if (bin == NULL) {
         perror("Error al crear el archivo binario destino");
         fclose(txt);
         return;
     }
 
-    // 2. Leer la primera línea del archivo de texto (Metadatos de la matriz)
     int filas = 0, columnas = 0, elementos_no_nulos = 0;
     if (fscanf(txt, "%d %d %d", &filas, &columnas, &elementos_no_nulos) != 3) {
         fprintf(stderr, "Error al leer la cabecera del archivo: %s\n", archivo_txt);
@@ -26,20 +24,15 @@ void convertir_txt_a_binario(const char *archivo_txt, const char *archivo_bin) {
         return;
     }
 
-    // Guardamos los metadatos al inicio del binario. Esto nos servirá en los 
-    // siguientes pasos para saber cuántos elementos leer sin adivinar.
     fwrite(&filas, sizeof(int), 1, bin);
     fwrite(&columnas, sizeof(int), 1, bin);
     fwrite(&elementos_no_nulos, sizeof(int), 1, bin);
 
-    // 3. Leer secuencialmente el texto y volcarlo directamente al binario
     ElementoEsparso elemento;
     int procesados = 0;
 
-    // Leemos exactamente la cantidad de elementos no nulos indicados en la cabecera
     for (int i = 0; i < elementos_no_nulos; i++) {
         if (fscanf(txt, "%d %d %lf", &elemento.fila, &elemento.col, &elemento.valor) == 3) {
-            // Escribir la estructura completa directamente como un bloque de bytes
             fwrite(&elemento, sizeof(ElementoEsparso), 1, bin);
             procesados++;
         } else {
@@ -48,7 +41,6 @@ void convertir_txt_a_binario(const char *archivo_txt, const char *archivo_bin) {
         }
     }
 
-    // 4. Cerrar descriptores de archivo
     fclose(txt);
     fclose(bin);
 
