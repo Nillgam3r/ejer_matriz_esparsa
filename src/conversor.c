@@ -1,6 +1,5 @@
 #include "conversor.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 void convertir_txt_a_binario(const char *archivo_txt, const char *archivo_bin) {
     FILE *txt = fopen(archivo_txt, "r");
