@@ -11,4 +11,4 @@
  */
 void generar_matriz_esparsa_txt(const char *nombre_archivo, int filas, int columnas);
 
-#endif // GENERADOR_H
+#endif
